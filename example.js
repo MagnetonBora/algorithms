@@ -87,7 +87,7 @@ var foo = function() {
       };
 
 			var obj = {
-        level: level,
+        			level: level,
 				parent_id: parent_id,
 				children: children,
 				label: branch.label

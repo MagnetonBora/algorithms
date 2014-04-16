@@ -47,8 +47,26 @@ var form_tree2 = function(arr) {
 	};
 };
 
-form_tree2(tree);
+var find = function(key) {
+	var l = 0;
+	var r = tree.length ;
+	var m = parseInt( 0.5 * (l+r) );
+	while (tree[m].id != key) {
+		if (key < tree[m].id) {
+			r = m-1;
+		} else {
+			l = m + 1;
+		};
+		m = parseInt( 0.5 * (r+l) );
+	};
+	console.log(tree[m]);
+	return m;
+};
 
-tree.forEach(function(item) {
-	console.log(item.id + ' : ' + item.parent_id + ' : ' + item.lev);
-});
+find(392);
+
+// form_tree2(tree);
+
+// tree.forEach(function(item) {
+// 	console.log(item.id + ' : ' + item.parent_id + ' : ' + item.lev);
+// });

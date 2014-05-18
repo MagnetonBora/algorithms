@@ -1,9 +1,17 @@
 
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
 /* Шифр Виженера */
+
+void usage()
+{
+	std::cout << "-------------------" << std::endl;
+	std::cout << "-------USAGE-------" << std::endl;
+	std::cout << "-------------------" << std::endl;
+}
 
 void crypto_table()
 {
@@ -54,8 +62,32 @@ char* dec(char* src, char* key)
 
 int main(int argc, char* argv[])
 {
-	char *str = (char*)"THIS IS A TEST";
-	char *key = (char*)"SECRET";
+	if (argc == 1)
+	{
+		usage();
+		return 0;
+	}
+
+        char *str = (char*)"THIS IS A TEST";
+        char *key = (char*)"SECRET";
+
+	for(int i = 0; i < argc; i++)
+	{
+		if ( !strcmp(argv[i], "-k") )
+		{
+			key = argv[i+1];
+		}
+
+		if ( !strcmp(argv[i], "-s") )
+		{
+			str = argv[i+1];
+		}
+
+		if ( !strcmp(argv[i], "-demo") )
+		{
+			std::cout << "Demo: " << std::endl;
+		}
+	}
 
 	char* enc_text = enc( str, key );
 	char* dec_text = dec( enc_text, key );
@@ -64,13 +96,8 @@ int main(int argc, char* argv[])
 	std::cout << "Encrypted text: " << enc_text << std::endl;
 	std::cout << "Dencrypted text: " << dec_text << std::endl;
 
-	if (enc_text) {
-		delete[] enc_text;
-	};
-
-	if (dec_text) {
-		delete[] dec_text;
-	};
+	if (enc_text) delete[] enc_text;
+	if (dec_text) delete[] dec_text;
 
 	return 0;
 }

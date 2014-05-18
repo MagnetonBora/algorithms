@@ -34,15 +34,26 @@ void enc(char* src, char* key, char* buffer)
 
 char* dec(char* src, char* key)
 {
-	// ...
+	int src_len = std::char_traits<char>::length(src);
+	int key_len = std::char_traits<char>::length(key);
+
+	for(int i = 0; i < src_len; i++)
+	{
+		char s = 'A' + ( ( src[i] - key[ i % key_len ] + 26 ) % 26 );
+		std::cout << s  << " ";
+	}
+
+	return NULL;
 }
 
 int main(int argc, char* argv[])
 {
 	char buffer[256] = { 0 };
 
-	char *str = (char*)"HELLO";
-	char *key = (char*)"SKJFDKASJDKFASD";
+	char *str = (char*)"HELLOYOU";
+	char *key = (char*)"S";
+
+	std::cout << str << std::endl;
 
 	enc( str, key, buffer );
 
@@ -52,6 +63,12 @@ int main(int argc, char* argv[])
 	{
 		std::cout << buffer[i] << " ";
 	}
+
 	std::cout << std::endl;
+
+	dec( buffer, key );
+
+	std::cout << std::endl;
+
 	return 0;
 }

@@ -1,19 +1,14 @@
+
 #include <iostream>
 
 using namespace std;
 
 /* Шифр Виженера */
 
-void enc(char* src, char* key, char* buffer)
+void crypto_table()
 {
 	const int len = 26;
-
         char table[len][len] = { 0 };
-
-	int src_len = std::char_traits<char>::length(src);
-	int key_len = std::char_traits<char>::length(key);
-
-	int key_base = src_len >= key_len ? key_len : src_len;
 
         for(int i = 0; i < len; i++)
         {
@@ -23,13 +18,22 @@ void enc(char* src, char* key, char* buffer)
                         table[i][j] = table[j][i] = 'A' + ( (i + j) % 26 );
                 }
         }
+}
+
+char* enc(char* src, char* key)
+{
+	int src_len = std::char_traits<char>::length(src);
+	int key_len = std::char_traits<char>::length(key);
+
+	char* text = new char[src_len + 1];
 
 	for(int i = 0; i < src_len; i++)
 	{
-		char s = src[i];
-		char k = key[ i % key_base ];
-		buffer[i] = table[ s % 65 ][ k % 65 ];
+//		text[i] = 'A' + ( ( src[i] + key[ i % key_len ] ) % 26 );
+		text[i] = ( ( src[i] + key[ i % key_len ] ) % 256 );
 	}
+
+	return text;
 }
 
 char* dec(char* src, char* key)
@@ -37,38 +41,36 @@ char* dec(char* src, char* key)
 	int src_len = std::char_traits<char>::length(src);
 	int key_len = std::char_traits<char>::length(key);
 
+	char* out = new char[src_len + 1];
+
 	for(int i = 0; i < src_len; i++)
 	{
-		char s = 'A' + ( ( src[i] - key[ i % key_len ] + 26 ) % 26 );
-		std::cout << s  << " ";
+//		out[i] = 'A' + ( ( src[i] - key[ i % key_len ] + 26 ) % 26 );
+		out[i] = ( ( src[i] - key[ i % key_len ] + 256 ) % 256 );
 	}
 
-	return NULL;
+	return out;
 }
 
 int main(int argc, char* argv[])
 {
-	char buffer[256] = { 0 };
+	char *str = (char*)"THIS IS A TEST";
+	char *key = (char*)"SECRET";
 
-	char *str = (char*)"HELLOYOU";
-	char *key = (char*)"S";
+	char* enc_text = enc( str, key );
+	char* dec_text = dec( enc_text, key );
 
-	std::cout << str << std::endl;
+	std::cout << "Message: " << str << std::endl;
+	std::cout << "Encrypted text: " << enc_text << std::endl;
+	std::cout << "Dencrypted text: " << dec_text << std::endl;
 
-	enc( str, key, buffer );
+	if (enc_text) {
+		delete[] enc_text;
+	};
 
-	int len = std::char_traits<char>::length(str);
-
-	for(int i = 0; i < len; i++)
-	{
-		std::cout << buffer[i] << " ";
-	}
-
-	std::cout << std::endl;
-
-	dec( buffer, key );
-
-	std::cout << std::endl;
+	if (dec_text) {
+		delete[] dec_text;
+	};
 
 	return 0;
 }
